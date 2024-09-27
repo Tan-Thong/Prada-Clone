@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.com">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/assets/css/home.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/item.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/wish-list.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/add-to-bag.css}">
+    <title>Home</title>
+</head>
+<body>
+    <header th:replace="/fragments/header :: header"></header>
+
+    <div class="wishlist-content">
+        <h4 style="padding: 30px 0; height: 80px">Wishlish (<span th:text="${listItems.size()}"></span>)</h4>
+        <div th:if="${listItems.size()} == 0" class="wish-list-null">
+            <div>
+                <p class="message">Your wishlist is empty. Explore the collections, save your favourite items and collect them here.</p>
+                <a th:href="@{/}" class="btn-shopping">CONTINUE SHOPPING</a>
+            </div>
+        </div>
+        <div class="shop">
+            <div class="product" th:href="@{/item-detail/{id}(id=${product.id})}" th:each="product, iterStat : ${listItems}">
+                <a th:href="@{/item-detail/{id}(id=${product.id})}">
+                    <div class="img">
+                        <i th:if="${product.stock == 0}" id="soldoutIcon" class="soldout"></i>
+                        <img th:src="@{'/uploads/'+${product.image}}" alt="">
+                        <i class="heart wishListHeart" th:classappend="${product.isLike} ? 'liked' : ''" th:data-item-id="${product.id}" th:data-is-liked="${product.isLike}"></i>
+                    </div>
+                    <div class="desc">
+                        <h5 style="padding: 5px 0;" th:text="${product.name}"></h5>
+                        <p class="price" style="font-size: 14px;">$ <span th:text="${product.price}" class="formattedNumber"></span></p>
+                    </div>
+                </a>
+
+                <div th:if="${numberOfCart == 0}">
+                    <div th:if="${product.stock > 0}" class="btn-add" th:data-modal="'modal' + ${iterStat.count}">ADD TO BAG</div>
+                </div>
+
+                <div th:if="${lisCartItem == null}" th:each="cartItem : ${listCartItem}">
+                    <div th:if="${product.id == cartItem.product.id}">
+                        <div th:if="${product.stock > 0 && product.stock > cartItem.quantity}" class="btn-add" th:data-modal="'modal' + ${iterStat.count}">ADD TO BAG</div>
+                        <div th:if="${product.stock == cartItem.quantity}" class="btn-add button-disabled">has reached the stock limit</div>
+                    </div>
+                    <div th:if="${!(product.id == cartItem.product.id)}">
+                        <div th:if="${product.stock > 0}" class="btn-add" th:data-modal="'modal' + ${iterStat.count}">ADD TO BAG</div>
+                    </div>
+                </div>
+
+                <div th:if="${product.stock == 0}" class="btn-add button-disabled">SOLD OUT</div>
+
+                <div th:id="'modal' + ${iterStat.count}" class="modal" th:data-max-quantity="${product.stock}">
+                    <div class="modal-content">
+                        <span class="close" th:data-modal="'modal' + ${iterStat.count}">&times;</span>
+                        <form role="form" method="post" th:action="@{/add-to-cart/{id}(id=${product.id})}">
+                            <div class="detail">
+                                <img th:src="@{'/uploads/'+${product.image}}" alt="">
+                                <div class="desc">
+                                    <div class="infor">
+                                        <p style="margin: 30px 0 10px 0;"><b th:text="${product.name}">Printed silk twill mini-dress</b></p>
+                                        <p class="price" style="margin: 10px 0 22px 0;">$ <span class="formattedNumber" th:text="${product.price}"></span></p>
+                                        <div class="s-detail" style="border-top: #ccc 1px solid;">
+                                            <p><b>Color:</b></p>
+                                            <div class="circle" th:style="'background-color:' + ${product.color.id}"></div>
+                                            <p th:text="${product.color.name}">Alabaster Pink</p>
+                                        </div>
+                                        <div class="s-detail">
+                                            <p><b>Material: </b><span th:text="${product.material}">100% silk</span></p>
+                                        </div>
+                                        <div class="s-detail" style="justify-content: space-between;">
+                                            <p><b>Quantity: </b></p>
+                                            <div class="quantity">
+                                                <button type="button" id="decrement" th:data-modal="'modal' + ${iterStat.count}"><img th:src="@{./assets/image/minus.png}" alt=""></button>
+                                                <span id="quantity">1</span>
+                                                <input type="hidden" name="quantity" id="quantityInput" value="1">
+                                                <button type="button" id="increment" th:data-modal="'modal' + ${iterStat.count}"><img th:src="@{./assets/image/plus.png}" alt=""></button>
+                                            </div>
+                                        </div>
+                                        <div class="sub-desc">
+                                            <p style="height: 54px; line-height: 54px;"><b>Details:</b></p>
+                                            <p style="height: 110px; overflow: auto; padding-bottom: 20px;" th:text="${product.description}">This silk twill mini-dress has a shirt-dress silhouette
+                                                brightened by a paisley print. Embellished with a refined bow collar, the style with
+                                                simple yet sophisticated details is decorated with the iconic geometric shape of the
+                                                fabric triangle logo. This silk twill mini-dress has a shirt-dress silhouette
+                                                brightened by a paisley print. Embellished with a refined bow collar, the style with
+                                                simple yet sophisticated details is decorated with the iconic geometric shape of the
+                                                fabric triangle logo.</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="button">
+                                        <div class="btn-cancel" th:data-modal="'modal' + ${iterStat.count}">CANCEL</div>
+                                        <button type="submit" class="btn-confirm">CONFIRM</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer" style="max-height: 95px; display: flex; align-items: center; padding: 20px; margin: 0;">
+        <p style="font-size: 10px;">©PRADA 2007 - 2024</p>
+    </footer>
+    <div th:replace="/fragments/script :: script"></div>
+    <div th:replace="/fragments/script-add-to-bag :: script-add"></div>
+    <div th:replace="/fragments/script-wish-list :: script"></div>
+</body>
+</html>

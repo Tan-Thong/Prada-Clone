@@ -1,0 +1,56 @@
+<div th:fragment="script">
+    <script>
+        // Get the modal
+        var modalBag = document.getElementById("modalBag");
+
+        // Get the button that opens the modal
+        var btnBag = document.getElementById("btnBag");
+
+        // Get the <span> element that closes the modal
+        var span1 = document.getElementsByClassName("closeBag")[0];
+
+        // When the user clicks the button, open the modal
+
+        btnBag.onclick = function() {
+            modalBag.style.display = "block";
+            document.body.classList.add('hidden-scroll');
+        }
+
+        // When the user clicks on <span> (x), close the modal
+        span1.onclick = function() {
+            modalBag.style.display = "none";
+            document.body.classList.remove('hidden-scroll');
+            btnSearch.classList.remove("disabled-button");
+        }
+
+        // When the user clicks anywhere outside of the modal, close it
+
+        window.onclick = function(event) {
+            if (event.target == modalBag) {
+                modalBag.style.display = "none";
+                document.body.classList.remove('hidden-scroll');
+                btnSearch.classList.remove("disabled-button");
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lấy giá từ phần tử span
+            var priceElements = document.querySelectorAll('.formattedNumber');
+            // Lặp qua từng phần tử và định dạng giá
+            priceElements.forEach(function(priceElement) {
+                // Lấy giá từ nội dung của phần tử
+                var price = parseFloat(priceElement.textContent);
+
+                // Định dạng giá
+                var formattedPrice = price.toLocaleString('en-US');
+
+                // Cập nhật giá đã định dạng vào phần tử
+                priceElement.textContent = formattedPrice;
+            });
+        });
+
+        function submitForm() {
+            document.getElementById('favoriteForm').submit();
+        }
+    </script>
+</div>

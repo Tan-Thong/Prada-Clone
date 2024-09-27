@@ -1,0 +1,78 @@
+.content {
+    margin-top: 50px;
+}
+
+.soldout {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 60px;
+    height: 60px;
+    background-image: url("/assets/image/out-of-stock-1.png");
+    background-size: cover;
+}
+
+.detail {
+    display: flex;
+    width: 100%;
+
+}
+
+.detail .img {
+    width: 50%;
+    position: relative;
+}
+
+.detail .img img {
+    width: 100%;
+}
+
+.detail .desc {
+    display: flex;
+    position: -webkit-sticky; /* Safari */
+    position: sticky;
+    top: 50px;
+    align-items: center;
+    height: calc(100vh - 50px);
+    padding: 0 64px;
+    width: 50%;
+}
+
+.price {
+    font-size: 14px;
+}
+
+.s-detail {
+    font-size: 12px;
+}
+
+.border {
+    border: #000 1px solid;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+.circle {
+    margin: 2px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.btn-submit {
+    text-transform: uppercase;
+    display: block;
+    font-size: 14px;
+    line-height: 45px;
+    margin-top: 30px;
+    text-align: center;
+    width: 100%;
+    height: 45px;
+    color: #fff;
+    background: #000;
+    font-weight: 600;
+    border: none;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

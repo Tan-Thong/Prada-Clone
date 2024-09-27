@@ -1,0 +1,47 @@
+<div th:fragment="script">
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.wishListHeart').forEach(function(heart) {
+                heart.addEventListener('click', function(event) {
+                    event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ a nếu cần
+                    event.stopPropagation(); // Ngăn chặn sự kiện lan truyền lên các phần tử cha và xử lý các sự kiện khác
+
+                    const heart = event.target;
+                    const itemId = heart.getAttribute('data-item-id');
+                    const isLiked = heart.classList.contains('liked');
+                    const url = heart.classList.contains('liked') ? `/item-detail/delete/${itemId}` : `/item-detail/insert/${itemId}`;
+                    const method = isLiked ? 'DELETE' : 'POST';
+                    const newIsLiked = !isLiked;
+
+                    fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ isLike: newIsLiked })
+                    })
+                    .then(response => {
+                        if (response.ok) {
+<!--                            location.reload();-->
+                            heart.classList.toggle('liked');
+                            heart.setAttribute('data-is-liked', newWishIsLiked);
+                        } else {
+                            console.error('Failed to update wishlist');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+
+            document.querySelectorAll('a').forEach(function(anchor) {
+                anchor.addEventListener('click', function(event) {
+                    // Kiểm tra nếu phần tử nhấp vào không phải là .wishListHeart
+                    if (event.target.closest('.wishListHeart')) {
+                        event.preventDefault(); // Ngăn chặn hành vi mặc định của thẻ a nếu nhấp vào wishListHeart
+                        event.stopPropagation();
+                    }
+                });
+            });
+        });
+    </script>
+</div>

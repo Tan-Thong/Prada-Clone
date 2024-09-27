@@ -1,0 +1,30 @@
+<div th:fragment="script">
+    <script>
+        document.getElementById('heartIcon').addEventListener('click', function(event) {
+            const heart = event.target;
+            const itemId = heart.getAttribute('data-item-id');
+            const isLiked = heart.classList.contains('liked');
+<!--            const url = `/item-detail/${itemId}`;-->
+            const url = heart.classList.contains('liked') ? `/item-detail/delete/${itemId}` : `/item-detail/insert/${itemId}`;
+            const method = isLiked ? 'DELETE' : 'POST';
+            const newIsLiked = !isLiked;
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ isLike: newIsLiked })
+            })
+            .then(response => {
+                if (response.ok) {
+                    heart.classList.toggle('liked');
+                    heart.setAttribute('data-is-liked', newIsLiked);
+                } else {
+                    console.error('Failed to update wishlist');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</div>

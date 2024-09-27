@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/assets/css/home.css}">
+    <link rel="stylesheet" th:href="@{/assets/css/item.css}">
+    <title>Item</title>
+</head>
+<body>
+    <header th:replace="/fragments/header :: header"></header>
+
+    <div class="category" style="margin-top: 50px;">
+        <div class="sub-nav" style="padding: 0 20px;">
+            <ul class="menu">
+                <li style="padding-left: 0px; padding-right: 20px;"><h3 th:text="${categoryParent}" style="text-transform: uppercase;">READY TO WEAR</h3></li>
+                <li><a style="font-size: 12px;" class="hover" th:href="@{${api}}">View all</a></li>
+                <li th:each="category : ${listCategory}"><a style="font-size: 12px;" class="hover api" th:href="@{${api}  + '/' + ${@thymeleafUtility.formatCategoryName(category.name)}}" th:text="${category.name}">Outerwear</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="item-content">
+        <div class="sort" style="display: flex; justify-content: space-between; margin: 20px 0;">
+            <h5><span th:text="${number}"></span> PRODUCTS</h5>
+<!--            <div style="display: flex;">-->
+<!--&lt;!&ndash;                <h5>FILTERS  |  SORT BY:</h5>&ndash;&gt;-->
+<!--                <select id="sortOrder">-->
+<!--                    <option value="defaut">SORT BY: SUGGESTED</option>-->
+<!--                    <option value="asc">SORT BY: PRICE LOW TO HIGH</option>-->
+<!--                    <option value="desc">SORT BY: PRICE HIGH TO LOW</option>-->
+<!--                </select>-->
+<!--            </div>-->
+        </div>
+
+        <div class="shop">
+            <div class="product" th:each="product : ${list}">
+                <a th:href="@{/item-detail/{id}(id=${product.id})}">
+                    <div class="img">
+                        <i th:if="${product.stock == 0}" id="soldoutIcon" class="soldout"></i>
+                        <img th:src="@{'/uploads/'+${product.image}}" alt="">
+                        <i class="heart wishListHeart" th:classappend="${product.isLike} ? 'liked' : ''" th:data-item-id="${product.id}" th:data-is-liked="${product.isLike}"></i>
+                    </div>
+                    <div class="desc" style="padding-left: 8px;">
+                        <h5 style="padding: 5px 0;" th:text="${product.name}"></h5>
+                        <p class="price" style="font-size: 14px;">$ <span class="formattedNumber" th:text="${product.price}"></span></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="/fragments/footer :: footer"></footer>
+
+    <div th:replace="/fragments/script :: script"></div>
+    <div th:replace="/fragments/script-item :: script"></div>
+</body>
+</html>
